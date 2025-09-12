@@ -1,26 +1,25 @@
-import { useState } from "react";
-import "./App.css";
-
-function App() {
-  const [count, setCount] = useState(0);
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { MainLayout } from "./layout/MainLayout";
+import { FlowerShopsPage } from "./pages/FlowerShopsPage";
+import { ShoppingCartPage } from "./pages/ShoppingCartPage";
+import { Toaster } from "react-hot-toast";
+import "react-toastify/dist/ReactToastify.css";
+import { OrderHistoryPage } from "./pages/OrderHistoryPage";
+import { OrderDetailsPage } from "./pages/OrderDetailsPage";
+export const App = () => {
   return (
     <>
-      <div>
-        <h1 className="text-3xl font-bold underline">Hello world!</h1>
-      </div>
-      <p className="text-red-700">Vite + React</p>
-      <div className="card">
-        <button onClick={() => setCount(count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="text-red-500">
-        Click on the Vite and React logos to learn more
-      </p>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<MainLayout />}>
+            <Route index element={<FlowerShopsPage />} />
+            <Route path="/cart" element={<ShoppingCartPage />} />
+            <Route path="/order-history" element={<OrderHistoryPage />} />
+            <Route path="/orders/:orderId" element={<OrderDetailsPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+      <Toaster position="top-center" />
     </>
   );
-}
-
-export default App;
+};
