@@ -5,6 +5,7 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { fetchFlowersByShop } from "../../../api/flowers";
 import { FlowersGridSkeleton } from "../../common/FlowersGridSkeleton";
+import PaginationRounded from "../../ui/Pagination";
 
 type FlowersGridProps = {
   shopId: number;
@@ -14,11 +15,15 @@ export const FlowersGrid = ({ shopId }: FlowersGridProps) => {
   const [flowers, setFlowers] = useState<Flower[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const fetchFlowers = async () => {
+    setLoading(true);
     try {
-      const data = await fetchFlowersByShop(shopId, sortOrder);
-      setFlowers(data);
+      const data = await fetchFlowersByShop(shopId, sortOrder, page);
+      setFlowers(data.items);
+      setTotalPages(data.totalPages || 1);
     } catch (err) {
       console.error(err);
     } finally {
@@ -28,7 +33,8 @@ export const FlowersGrid = ({ shopId }: FlowersGridProps) => {
 
   useEffect(() => {
     fetchFlowers();
-  }, [shopId, sortOrder]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shopId, sortOrder, page]);
 
   if (loading) return <FlowersGridSkeleton count={12} />;
 
@@ -43,8 +49,7 @@ export const FlowersGrid = ({ shopId }: FlowersGridProps) => {
               : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
           }`}
         >
-          <ArrowUpwardIcon fontSize="small" />
-          price
+          <ArrowUpwardIcon fontSize="small" /> price
         </button>
 
         <button
@@ -55,8 +60,7 @@ export const FlowersGrid = ({ shopId }: FlowersGridProps) => {
               : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
           }`}
         >
-          <ArrowDownwardIcon fontSize="small" />
-          price
+          <ArrowDownwardIcon fontSize="small" /> price
         </button>
       </div>
 
@@ -68,6 +72,14 @@ export const FlowersGrid = ({ shopId }: FlowersGridProps) => {
             onFavoriteToggle={fetchFlowers}
           />
         ))}
+      </div>
+
+      <div className="mt-6 flex justify-center">
+        <PaginationRounded
+          page={page}
+          totalPages={totalPages}
+          onChange={(newPage) => setPage(newPage)}
+        />
       </div>
     </div>
   );

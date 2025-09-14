@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useCallback } from "react";
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 
@@ -19,7 +20,8 @@ export const DeliveryMap = ({
   errors,
 }: DeliveryMapProps) => {
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyAzbGq6Y9XAjZ5G1HiBwtV1lfeVgX7NZfo",
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    language: "uk",
   });
 
   const fetchCoordinates = async (address: string) => {

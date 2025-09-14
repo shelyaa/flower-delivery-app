@@ -1,6 +1,6 @@
 import type { NewOrder } from "../types/Order";
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 export const createOrder = async (order: NewOrder) => {
   const res = await fetch(`${API_BASE}/orders`, {
@@ -8,19 +8,19 @@ export const createOrder = async (order: NewOrder) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(order),
   });
-  if (!res.ok) throw new Error("Помилка при отриманні квітів");
+  if (!res.ok) throw new Error("Error receiving products");
   return res.json();
 };
 
 export const fetchOrders = async () => {
   const res = await fetch(`${API_BASE}/orders`);
-  if (!res.ok) throw new Error("Помилка при отриманні замовлень");
+  if (!res.ok) throw new Error("Error receiving orders");
   return res.json();
 };
 
 export const fetchOrderById = async (orderId: number) => {
   const res = await fetch(`${API_BASE}/orders/${orderId}`);
-  if (!res.ok) throw new Error("Помилка при отриманні замовлення");
+  if (!res.ok) throw new Error("Error receiving order");
   return res.json();
 };
 
@@ -37,7 +37,7 @@ export const searchOrder = async (
 
   const res = await fetch(`${API_BASE}/orders/search?${params.toString()}`);
 
-  if (!res.ok) throw new Error("Помилка при отриманні замовлення");
+  if (!res.ok) throw new Error("Error receiving stores");
 
   return res.json();
 };
