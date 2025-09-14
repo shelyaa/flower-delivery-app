@@ -8,7 +8,7 @@ import { toggleFavorite } from "../../../api/flowers";
 
 type FlowerCardProps = {
   flower: Flower;
-  onFavoriteToggle: () => void; // тепер просто тригер для повторного fetch
+  onFavoriteToggle: () => void;
 };
 
 export const FlowerCard = ({ flower, onFavoriteToggle }: FlowerCardProps) => {

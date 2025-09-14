@@ -10,15 +10,23 @@ export const ShoppingCartPage = () => {
     0
   );
 
-
   return (
-    <div className="flex gap-10 p-10">
-      <OrderForm
-        cartItems={cartItems}
-        totalPrice={totalPrice}
-      />
+    <div className="flex flex-col lg:flex-row gap-20 p-4 lg:p-10">
+      <div className="block lg:hidden w-full mb-6">
+        <CartList />
+        <div className="flex justify-between items-center border-t pt-4">
+          <p className="font-bold text-lg">Total price: {totalPrice}$</p>
+        </div>
+        <div className="mt-6">
+          <OrderForm cartItems={cartItems} totalPrice={totalPrice} />
+        </div>
+      </div>
 
-      <div className="flex-1 flex flex-col gap-6">
+      <div className="hidden lg:block w-full lg:w-auto lg:max-w-md">
+        <OrderForm cartItems={cartItems} totalPrice={totalPrice} />
+      </div>
+
+      <div className="hidden lg:flex-1 lg:flex lg:flex-col lg:gap-6">
         <CartList />
         <div className="flex justify-between items-center border-t pt-4">
           <p className="font-bold text-lg">Total price: {totalPrice}$</p>

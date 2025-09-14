@@ -6,6 +6,7 @@ export type Order = {
   address: string;
   price: number;
   created_at: Date;
+  timezone: string;
   OrderItems: {
     id: number;
     name: string;
@@ -23,6 +24,7 @@ export type NewOrder = {
   phone: string;
   address: string;
   price: number;
+  timezone: string;
   items: {
     id: number;
     name: string;

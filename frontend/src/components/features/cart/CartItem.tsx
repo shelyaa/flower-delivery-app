@@ -1,6 +1,5 @@
 import type { CartItem as CartItemType } from "../../../types/CartItem";
 
-// src/components/cart/CartItemCard.tsx
 type CartItemCardProps = {
   item: CartItemType;
   updateQuantity: (id: number, quantity: number) => void;

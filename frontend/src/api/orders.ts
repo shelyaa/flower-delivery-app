@@ -23,3 +23,21 @@ export const fetchOrderById = async (orderId: number) => {
   if (!res.ok) throw new Error("Помилка при отриманні замовлення");
   return res.json();
 };
+
+export const searchOrder = async (
+  orderId?: number,
+  email?: string,
+  phone?: string
+) => {
+  const params = new URLSearchParams();
+
+  if (orderId) params.append("orderId", String(orderId));
+  if (email) params.append("email", email);
+  if (phone) params.append("phone", phone);
+
+  const res = await fetch(`${API_BASE}/orders/search?${params.toString()}`);
+
+  if (!res.ok) throw new Error("Помилка при отриманні замовлення");
+
+  return res.json();
+};

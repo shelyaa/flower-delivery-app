@@ -9,7 +9,7 @@ const getAllController = async (req, res) => {
     res.json(flowers);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Помилка сервера" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -21,7 +21,7 @@ const toggleFavoriteController = async (req, res) => {
     res.json(flower);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Помилка сервера" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 

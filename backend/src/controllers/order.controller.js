@@ -6,7 +6,7 @@ const getAllController = async (req, res) => {
     res.json(orders);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Помилка сервера" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -21,9 +21,26 @@ const getOneController = async (req, res) => {
   }
 };
 
+const searchOrderController = async (req, res) => {
+  try {
+    const { email, phone, orderId } = req.query;
+
+    if (!orderId && (!email || !phone)) {
+      return res.status(400).json({
+        error: "Provide orderId OR both email and phone.",
+      });
+    }
+
+    const orders = await orderService.searchOrder(email, phone, orderId);
+    res.json(orders);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message || "Cannot find orders" });
+  }
+};
 const createOrder = async (req, res) => {
   try {
-    const { name, email, phone, address, items, price } = req.body;
+    const { name, email, phone, address, items, price, timezone } = req.body;
 
     if (
       !name ||
@@ -34,7 +51,7 @@ const createOrder = async (req, res) => {
       items.length === 0 ||
       !price
     ) {
-      return res.status(400).json({ error: "Всі поля обов’язкові" });
+      return res.status(400).json({ error: "All fields are required" });
     }
 
     const order = await orderService.createOrder({
@@ -44,16 +61,22 @@ const createOrder = async (req, res) => {
       price,
       address,
       items,
+      timezone,
     });
 
     res.status(201).json(order);
   } catch (error) {
     console.error("Controller error:", error);
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-const orderController = { createOrder, getAllController, getOneController };
+const orderController = {
+  createOrder,
+  getAllController,
+  getOneController,
+  searchOrderController,
+};
 
 module.exports = {
   orderController,

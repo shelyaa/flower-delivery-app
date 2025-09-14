@@ -11,6 +11,7 @@ const Order = sequelize.define(
     phone: { type: DataTypes.STRING, allowNull: false },
     address: { type: DataTypes.STRING, allowNull: false },
     created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+    timezone: { type: DataTypes.STRING, allowNull: false, defaultValue: "UTC" },
   },
   {
     tableName: "orders",

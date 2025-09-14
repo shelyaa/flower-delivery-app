@@ -4,7 +4,7 @@ export const Skeleton = ({ count = 5 }: { count?: number }) => {
       {Array.from({ length: count }).map((_, i) => (
         <div
           key={i}
-          className="h-16 bg-gray-200 rounded-md animate-pulse"
+          className="h-16 bg-gray-300 rounded-md animate-pulse"
         ></div>
       ))}
     </div>

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 export const Header = () => {
   return (
@@ -7,13 +7,36 @@ export const Header = () => {
         Flower Shop
       </Link>
       <nav className="flex gap-6">
-        <Link to="/" className="border-r-2 border-gray-500 pr-6">
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            [
+              "border-r-2 border-gray-500 pr-6",
+              isActive ? "underline " : "",
+            ].join(" ")
+          }
+        >
           Shop
-        </Link>
-        <Link to="/cart" className="border-r-2 border-gray-500 pr-6">Shopping Cart</Link>
-        <Link to="/order-history" className="">
+        </NavLink>
+        <NavLink
+          to="/cart"
+          className={({ isActive }) =>
+            [
+              "border-r-2 border-gray-500 pr-6",
+              isActive ? "underline" : "",
+            ].join(" ")
+          }
+        >
+          Shopping Cart
+        </NavLink>
+        <NavLink
+          to="/order-history"
+          className={({ isActive }) =>
+            ["", isActive ? "underline" : ""].join(" ")
+          }
+        >
           History
-        </Link>
+        </NavLink>
       </nav>
     </header>
   );

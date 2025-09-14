@@ -12,7 +12,7 @@ const sequelize = new Sequelize(
     dialectOptions: {
       ssl: {
         require: true,
-        rejectUnauthorized: false, // дозволяє підключатись до Neon без сертифікату
+        rejectUnauthorized: false, 
       },
     },
     logging: false,

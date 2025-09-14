@@ -20,7 +20,7 @@ export const CartList = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4 border p-4 rounded-md max-h-[400px] overflow-y-auto">
+    <div className="flex flex-col gap-4 border p-4 rounded-md max-h-[400px] overflow-y-auto ">
       {items.length === 0 ? (
         <div className="text-center text-gray-500">Cart is empty</div>
       ) : (

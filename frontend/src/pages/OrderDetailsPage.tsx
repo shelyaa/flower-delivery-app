@@ -10,7 +10,6 @@ export const OrderDetailsPage = () => {
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
   useEffect(() => {
     const loadOrder = async () => {
       if (!orderId) return;
@@ -21,7 +20,7 @@ export const OrderDetailsPage = () => {
         setOrder(data);
       } catch (err) {
         console.error(err);
-        setError("Помилка при завантаженні замовлення");
+        setError("We couldn't load your order. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -30,9 +29,10 @@ export const OrderDetailsPage = () => {
     loadOrder();
   }, [orderId]);
 
-  if (loading) return <p>Завантаження...</p>;
-  if (error) return <p>{error}</p>;
-  if (!order) return <p>Замовлення не знайдено</p>;
+  if (loading) return <p>Loading...</p>;
+  if (error)
+    return <p className="flex justify-center m-auto  text-gray-500">{error}</p>;
+  if (!order) return <p>Order not found</p>;
 
   return (
     <div className="p-6 bg-gray-50 min-h rounded-lg max-w-3xl m-auto">
@@ -45,6 +45,7 @@ export const OrderDetailsPage = () => {
           <p className="text-lg font-bold">Order #{order.id}</p>
           <span className="text-sm text-gray-400">
             {new Date(order.created_at).toLocaleString("uk-UA", {
+              timeZone: "Etc/GMT-6",
               year: "numeric",
               month: "2-digit",
               day: "2-digit",

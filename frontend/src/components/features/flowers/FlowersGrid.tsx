@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import type { Flower } from "../../../types/Flower";
 import { FlowerCard } from "./FlowerCard";
-import { Skeleton } from "../../common/ShopsSidebarSkeleton";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { fetchFlowersByShop } from "../../../api/flowers";
+import { FlowersGridSkeleton } from "../../common/FlowersGridSkeleton";
 
 type FlowersGridProps = {
   shopId: number;
@@ -30,7 +30,7 @@ export const FlowersGrid = ({ shopId }: FlowersGridProps) => {
     fetchFlowers();
   }, [shopId, sortOrder]);
 
-  if (loading) return <Skeleton />;
+  if (loading) return <FlowersGridSkeleton count={12} />;
 
   return (
     <div>
@@ -60,12 +60,12 @@ export const FlowersGrid = ({ shopId }: FlowersGridProps) => {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {flowers.map((flower) => (
           <FlowerCard
             key={flower.id}
             flower={flower}
-            onFavoriteToggle={fetchFlowers} // після toggle знову fetch
+            onFavoriteToggle={fetchFlowers}
           />
         ))}
       </div>

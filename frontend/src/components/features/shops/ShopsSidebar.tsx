@@ -5,9 +5,10 @@ import { Skeleton } from "../../common/ShopsSidebarSkeleton";
 
 type ShopsSidebarProps = {
   onSelectShop: (shopId: number) => void;
+  shopId: number | null;
 };
 
-export const ShopsSidebar = ({ onSelectShop }: ShopsSidebarProps) => {
+export const ShopsSidebar = ({ onSelectShop, shopId }: ShopsSidebarProps) => {
   const [shops, setShops] = useState<Shop[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -18,7 +19,7 @@ export const ShopsSidebar = ({ onSelectShop }: ShopsSidebarProps) => {
   }, []);
 
   return (
-    <div className="w-78 border-1 min-h-screen p-10 rounded-md">
+    <div className="border-1 min-h-screen p-10 rounded-md w-90">
       <h2 className="text-xl font-bold mb-6 text-center">Shops</h2>
       {loading ? (
         <Skeleton count={5} />
@@ -27,7 +28,9 @@ export const ShopsSidebar = ({ onSelectShop }: ShopsSidebarProps) => {
           {shops.map((shop) => (
             <div
               key={shop.id}
-              className="p-4 cursor-pointer rounded-md border-1 text-center font-medium hover:bg-[#535bf2] hover:text-white transition-colors"
+              className={`${
+                shopId === shop.id ? "text-main" : ""
+              }  p-4 cursor-pointer rounded-md border-1 text-center font-medium hover:bg-[#535bf2] hover:text-white transition-colors`}
               onClick={() => onSelectShop(shop.id)}
             >
               <p>{shop.name}</p>
