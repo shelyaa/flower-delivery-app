@@ -1,7 +1,7 @@
 export function formatDate(
   dateString: string | number | Date,
   locale = "uk-UA",
-  timezone = "Europe/Kiev"
+  timezone = "Europe/Kyiv"
 ) {
   return new Date(dateString).toLocaleString(locale, {
     timeZone: timezone,

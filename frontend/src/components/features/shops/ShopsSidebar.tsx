@@ -26,7 +26,7 @@ export const ShopsSidebar = ({ onSelectShop, shopId }: ShopsSidebarProps) => {
     );
 
   return (
-    <div className="border-1 lg:h-[65vh] p-10 rounded-md w-80 h-max sm:w-90">
+    <div className="border-1 lg:h-[75vh] p-10 rounded-md w-80 h-max sm:w-90">
       <h2 className="text-xl font-bold mb-6 text-center">Shops</h2>
       {isLoading ? (
         <Skeleton count={5} />
