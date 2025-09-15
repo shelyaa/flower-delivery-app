@@ -1,9 +1,9 @@
 const express = require("express");
 const cors = require("cors");
-const sequelize = require("./src/db");
-const shopRouter = require("./src/routes/shop.router");
-const flowerRouter = require("./src/routes/flower.router");
-const orderRouter = require("./src/routes/order.router");
+const sequelize = require("./db");
+const shopRouter = require("./routes/shop.router");
+const flowerRouter = require("./routes/flower.router");
+const orderRouter = require("./routes/order.router");
 
 const app = express();
 app.use(cors({
