@@ -19,7 +19,7 @@ const PaginationRounded = ({ page, totalPages, onChange }: Props) => {
           disabled={page === 1}
           className="px-4 py-2 border rounded disabled:opacity-50 hover:bg-gray-200"
         >
-          Назад
+          Prev
         </button>
 
         {Array.from({ length: totalPages }, (_, i) => (
@@ -39,7 +39,7 @@ const PaginationRounded = ({ page, totalPages, onChange }: Props) => {
           disabled={page === totalPages}
           className="px-4 py-2 border rounded disabled:opacity-50 hover:bg-gray-200"
         >
-          Вперед
+          Next
         </button>
       </div>
     )

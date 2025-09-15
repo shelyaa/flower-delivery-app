@@ -9,13 +9,14 @@ import PaginationRounded from "../../ui/Pagination";
 
 type FlowersGridProps = {
   shopId: number;
+  page: number;
+  setPage: (page: number) => void;
 };
 
-export const FlowersGrid = ({ shopId }: FlowersGridProps) => {
+export const FlowersGrid = ({ shopId, page, setPage }: FlowersGridProps) => {
   const [flowers, setFlowers] = useState<Flower[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
   const fetchFlowers = async () => {

@@ -5,6 +5,7 @@ import { useSearchParams } from "react-router-dom";
 
 export const FlowerShopsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [page, setPage] = useState(1);
   const shopIdParam = searchParams.get("shopId");
   const [activeShopId, setActiveShopId] = useState<number | null>(
     shopIdParam ? Number(shopIdParam) : null
@@ -16,10 +17,11 @@ export const FlowerShopsPage = () => {
     setActiveShopId(id);
     setSearchParams({ shopId: id.toString() });
     setIsSidebarOpen(false);
+    setPage(1);
   };
 
   return (
-    <div className="flex gap-10 p-6 relative">
+    <div className="flex gap-10 p-6 relative flex-col md:flex-row">
       <button
         className="block sm:hidden mb-4 px-4 py-2 bg-main text-white rounded-md font-semibold h-10"
         onClick={() => setIsSidebarOpen(true)}
@@ -54,7 +56,7 @@ export const FlowerShopsPage = () => {
 
       <div className="flex-1">
         {activeShopId ? (
-          <FlowersGrid shopId={activeShopId} />
+          <FlowersGrid shopId={activeShopId} page={page} setPage={setPage} />
         ) : (
           <div className="flex-1 flex justify-center items-center text-gray-500 h-[60vh]">
             Select a shop to see flowers
