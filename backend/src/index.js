@@ -6,7 +6,11 @@ const flowerRouter = require("./routes/flower.router");
 const orderRouter = require("./routes/order.router");
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://flower-delivery-app-shrl.vercel.app",
+  })
+);
 app.use(express.json());
 
 const PORT = process.env.PORT || 5000;

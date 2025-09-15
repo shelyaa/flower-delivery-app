@@ -31,7 +31,7 @@ export const OrderHistoryItem = ({ order }: OrderItemProps) => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-2 text-gray-700 text-base">
         <p>
-          <span className="font-semibold">Name</span> {order.name}
+          <span className="font-semibold">Name:</span> {order.name}
         </p>
         <p>
           <span className="font-semibold">Email:</span> {order.email}
