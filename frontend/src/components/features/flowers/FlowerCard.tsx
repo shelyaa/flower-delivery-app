@@ -21,7 +21,7 @@ export const FlowerCard = ({ flower, onFavoriteToggle }: FlowerCardProps) => {
         name: flower.name,
         price: flower.price,
         image_url: flower.image_url,
-      })
+      }),
     );
     toast.success("Item added to cart!");
   };
@@ -33,7 +33,7 @@ export const FlowerCard = ({ flower, onFavoriteToggle }: FlowerCardProps) => {
       onFavoriteToggle();
 
       toast.success(
-        flower.is_favorite ? "Removed from favorites!" : "Added to favorites!"
+        flower.is_favorite ? "Removed from favorites!" : "Added to favorites!",
       );
     } catch (err) {
       toast.error("Something went wrong");

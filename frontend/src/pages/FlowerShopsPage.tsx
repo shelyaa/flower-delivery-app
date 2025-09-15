@@ -8,7 +8,7 @@ export const FlowerShopsPage = () => {
   const [page, setPage] = useState(1);
   const shopIdParam = searchParams.get("shopId");
   const [activeShopId, setActiveShopId] = useState<number | null>(
-    shopIdParam ? Number(shopIdParam) : null
+    shopIdParam ? Number(shopIdParam) : null,
   );
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

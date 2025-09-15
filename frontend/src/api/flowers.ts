@@ -1,10 +1,10 @@
-const API_BASE = import.meta.env.VITE_API_BASE
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 export const fetchFlowersByShop = async (
   shopId: number,
   sort: "asc" | "desc" = "asc",
   page = 1,
-  limit = 6,
+  limit = 6
 ) => {
   try {
     const res = await fetch(

@@ -27,7 +27,7 @@ export const OrderHistoryPage = () => {
           </p>
         ) : (
           <div>
-            <h2 className="text-3xl font-extrabold mb-8 tracking-tight">
+            <h2 className="text-3xl font-extrabold mb-8 tracking-tight text-black">
               Order Details
             </h2>
             <div>

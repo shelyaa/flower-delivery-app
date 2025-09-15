@@ -14,19 +14,13 @@ export const OrderHistorySkeleton = ({ count = 2 }: { count?: number }) => {
           </div>
           <div className="space-y-3 mb-4">
             {Array.from({ length: 2 }).map((_, j) => (
-              <div
-                key={j}
-                className="h-12 bg-gray-200 rounded-md"
-              ></div>
+              <div key={j} className="h-12 bg-gray-200 rounded-md"></div>
             ))}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-2">
             {Array.from({ length: 5 }).map((_, k) => (
-              <div
-                key={k}
-                className="h-4 bg-gray-200 rounded w-40"
-              ></div>
+              <div key={k} className="h-4 bg-gray-200 rounded w-40"></div>
             ))}
           </div>
         </div>

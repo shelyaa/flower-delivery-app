@@ -1,57 +1,47 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import type { Order } from "../types/Order";
 import { fetchOrderById } from "../api/orders";
 import type { OrderItem as OrderItemType } from "../types/OrderItem";
 import { OrderItem } from "../components/features/orders/OrderItem";
+import { formatDate } from "../utils/formatDate";
 
 export const OrderDetailsPage = () => {
   const { orderId } = useParams<{ orderId: string }>();
-  const [order, setOrder] = useState<Order | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  useEffect(() => {
-    const loadOrder = async () => {
-      if (!orderId) return;
 
-      try {
-        setLoading(true);
-        const data = await fetchOrderById(Number(orderId));
-        setOrder(data);
-      } catch (err) {
-        console.error(err);
-        setError("We couldn't load your order. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const {
+    data: order,
+    isLoading,
+    isError,
+  } = useQuery<Order, Error>({
+    queryKey: ["order", orderId],
+    queryFn: () => fetchOrderById(Number(orderId)),
+    enabled: !!orderId,
+  });
 
-    loadOrder();
-  }, [orderId]);
-
-  if (loading) return <p>Loading...</p>;
-  if (error)
-    return <p className="flex justify-center m-auto  text-gray-500">{error}</p>;
+  if (isLoading)
+    return (
+      <p className="flex justify-center m-auto  text-gray-500">Loading...</p>
+    );
+  if (isError)
+    return (
+      <p className="flex justify-center m-auto  text-gray-500">
+        We couldn't load your order. Please try again later.
+      </p>
+    );
   if (!order) return <p>Order not found</p>;
 
   return (
     <div className="p-6 bg-gray-50 min-h rounded-lg max-w-3xl m-auto">
-      <h2 className="text-3xl font-extrabold mb-8 tracking-tight">
+      <h2 className="text-3xl font-extrabold mb-8 tracking-tight text-black">
         Order Details
       </h2>
 
       <div className="bg-white shadow-sm rounded-2xl p-6 mb-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-          <p className="text-lg font-bold">Order #{order.id}</p>
+          <p className="text-lg font-bold text-black">Order #{order.id}</p>
           <span className="text-sm text-gray-400">
-            {new Date(order.created_at).toLocaleString("uk-UA", {
-              timeZone: "Etc/GMT-6",
-              year: "numeric",
-              month: "2-digit",
-              day: "2-digit",
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
+            {formatDate(order.created_at)}
           </span>
         </div>
 

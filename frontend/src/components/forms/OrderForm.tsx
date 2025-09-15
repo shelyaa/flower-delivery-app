@@ -1,172 +1,166 @@
-import { useState } from "react";
-import type { CartItem } from "../../types/CartItem";
-import { createOrder } from "../../api/orders";
-import { useAppDispatch } from "../../hooks/redux";
-import { clearCart } from "../../store/slices/cartSlice";
-import { useNavigate } from "react-router-dom";
-import { DeliveryMap } from "../features/map/DeliveryMap";
-import { PatternFormat } from "react-number-format";
+import type {CartItem} from "../../types/CartItem";
+import {useForm, Controller} from "react-hook-form";
+import {createOrder} from "../../api/orders";
+import {useAppDispatch} from "../../hooks/redux";
+import {clearCart} from "../../store/slices/cartSlice";
+import {useNavigate} from "react-router-dom";
+import {DeliveryMap} from "../features/map/DeliveryMap";
+import {PatternFormat} from "react-number-format";
+import {ODESA_COORDINATES} from "../../constants/map";
+import {useState} from "react";
+import {ErrorMessage} from "../common/ErrorMessage";
 
 type OrderFormProps = {
   cartItems: CartItem[];
   totalPrice: number;
 };
 
-export const OrderForm = ({ cartItems, totalPrice }: OrderFormProps) => {
-  const [form, setForm] = useState({ name: "", email: "", phone: "" });
-  const [errors, setErrors] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    address: "",
-  });
-  const [loading, setLoading] = useState(false);
-  const [isCartEmpty, setIsCartEmpty] = useState(false);
-  const [address, setAddress] = useState("");
-  const [userCoordinates, setUserCoordinates] = useState({
-    lat: 46.4802,
-    lng: 30.742,
-  });
-  const [submitError, setSubmitError] = useState("");
+type FormInputs = {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+};
 
-  const shopCoordinates = { lat: 50.455, lng: 30.52 };
+export const OrderForm = ({cartItems, totalPrice}: OrderFormProps) => {
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: {errors},
+    reset,
+  } = useForm<FormInputs>({
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      address: "",
+    },
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [userCoordinates, setUserCoordinates] = useState(ODESA_COORDINATES);
+  const [isCartEmpty, setIsCartEmpty] = useState(false);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  const validate = () => {
-    const newErrors = { name: "", email: "", phone: "", address: "" };
-    if (!form.name.trim()) newErrors.name = "You need to enter a name.";
-    if (!form.email.trim())
-      newErrors.email = "You need to enter an email address.";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
-      newErrors.email = "Invalid email";
-    const phoneDigits = form.phone.replace(/\D/g, "");
-    if (!phoneDigits) newErrors.phone = "You need to enter a phone number.";
-    else if (phoneDigits.length < 10) newErrors.phone = "Invalid phone number.";
-    if (!address.trim()) newErrors.address = "You need to enter an address.";
-    return newErrors;
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: "" }));
-    setSubmitError("");
-  };
-
-  const handlePhoneChange = (value: string) => {
-    setForm((prev) => ({ ...prev, phone: value }));
-    setErrors((prev) => ({ ...prev, phone: "" }));
-    setSubmitError("");
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: FormInputs) => {
     setSubmitError("");
     if (cartItems.length === 0) {
       setIsCartEmpty(true);
       return;
     }
-    const validation = validate();
-    setErrors(validation);
 
-    if (Object.values(validation).every((v) => !v)) {
-      try {
-        setLoading(true);
-        const itemsForOrder = cartItems.map((item) => ({
-          ...item,
-          price: Number(item.price),
-          order_id: 0,
-          product_id: item.id,
-        }));
+    try {
+      setLoading(true);
+      const itemsForOrder = cartItems.map((item) => ({
+        ...item,
+        price: Number(item.price),
+        order_id: 0,
+        product_id: item.id,
+      }));
 
-        const newOrder = await createOrder({
-          ...form,
-          address,
-          items: itemsForOrder,
-          price: Number(totalPrice),
-          timezone,
-        });
+      const newOrder = await createOrder({
+        ...data,
+        items: itemsForOrder,
+        price: Number(totalPrice),
+        timezone,
+      });
 
-        dispatch(clearCart());
-        navigate(`/orders/${newOrder.order_id}`);
-      } catch (err) {
-        console.error(err);
-        setSubmitError("Order creation failed. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
+      dispatch(clearCart());
+      reset();
+      navigate(`/orders/${newOrder.order_id}`);
+    } catch (err) {
+      console.error(err);
+      setSubmitError("Order creation failed. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <form
       className="flex flex-col gap-4 md:min-w-[25vw] border p-6 rounded-md"
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       noValidate
     >
       <label className="flex flex-col">
         <span className="mb-1 font-medium">Name:</span>
         <input
-          name="name"
+          {...register("name", {required: "You need to enter a name."})}
           type="text"
           placeholder="Your name"
-          className={`border rounded-md p-2 ${
-            errors.name ? "border-red-600" : ""
-          }`}
-          value={form.name}
-          onChange={handleChange}
+          className={`border rounded-md p-2 ${errors.name ? "border-red-600" : ""}`}
         />
-        {errors.name && (
-          <span className="text-sm text-red-600">{errors.name}</span>
-        )}
+        <ErrorMessage message={errors.name?.message} />
       </label>
 
       <label className="flex flex-col">
         <span className="mb-1 font-medium">Email:</span>
         <input
-          name="email"
+          {...register("email", {
+            required: "You need to enter an email address.",
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: "Invalid email",
+            },
+          })}
           type="email"
           placeholder="Your email"
-          className={`border rounded-md p-2 ${
-            errors.email ? "border-red-600" : ""
-          }`}
-          value={form.email}
-          onChange={handleChange}
+          autoComplete="email"
+          className={`border rounded-md p-2 ${errors.email ? "border-red-600" : ""}`}
         />
-        {errors.email && (
-          <span className="text-sm text-red-600">{errors.email}</span>
-        )}
+        <ErrorMessage message={errors.email?.message} />
       </label>
 
       <label className="flex flex-col">
         <span className="mb-1 font-medium">Phone:</span>
-        <PatternFormat
-          format="+38 (###) ###-##-##"
-          mask="_"
+        <Controller
+          control={control}
           name="phone"
-          placeholder="Your phone"
-          className={`border rounded-md p-2 ${
-            errors.phone ? "border-red-600" : ""
-          }`}
-          value={form.phone}
-          onValueChange={(values) => handlePhoneChange(values.formattedValue)}
+          rules={{
+            required: "You need to enter a phone number.",
+            validate: (value) => {
+              const phoneDigits = value.replace(/\D/g, "");
+              if (!phoneDigits) return "You need to enter a phone number.";
+              if (phoneDigits.length < 10) return "Invalid phone number.";
+              return true;
+            },
+          }}
+          render={({field}) => (
+            <PatternFormat
+              format="+38 (###) ###-##-##"
+              mask="_"
+              placeholder="Your phone"
+              className={`border rounded-md p-2 ${errors.phone ? "border-red-600" : ""}`}
+              value={field.value}
+              onValueChange={(values) => field.onChange(values.formattedValue)}
+            />
+          )}
         />
-        {errors.phone && (
-          <span className="text-sm text-red-600">{errors.phone}</span>
-        )}
+        <ErrorMessage message={errors.phone?.message} />
       </label>
 
-      <DeliveryMap
-        userAddress={address}
-        setUserAddress={setAddress}
-        userCoordinates={userCoordinates}
-        setUserCoordinates={setUserCoordinates}
-        shopCoordinates={shopCoordinates}
-        errors={errors}
+      <Controller
+        control={control}
+        name="address"
+        rules={{
+          required: "You need to enter an address.",
+        }}
+        render={({field}) => (
+          <DeliveryMap
+            userAddress={field.value}
+            setUserAddress={field.onChange}
+            userCoordinates={userCoordinates}
+            setUserCoordinates={setUserCoordinates}
+            error={errors.address?.message}
+          />
+        )}
       />
+      <ErrorMessage message={errors.address?.message} />
 
       <button
         type="submit"

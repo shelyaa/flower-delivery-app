@@ -1,5 +1,6 @@
 import type { Order } from "../../../types/Order";
 import type { OrderItem as OrderItemType } from "../../../types/OrderItem";
+import { formatDate } from "../../../utils/formatDate";
 import { OrderItem } from "./OrderItem";
 
 type OrderItemProps = {
@@ -10,16 +11,9 @@ export const OrderHistoryItem = ({ order }: OrderItemProps) => {
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 ">
-        <p className="text-lg font-bold">Order #{order.id}</p>
+        <p className="text-lg font-bold text-black">Order #{order.id}</p>
         <span className="text-sm text-gray-400">
-          {new Date(order.created_at).toLocaleString("uk-UA", {
-            timeZone: "Etc/GMT-6",
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
+          {formatDate(order.created_at)}
         </span>
       </div>
 

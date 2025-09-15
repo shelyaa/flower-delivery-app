@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { fetchShops } from "../../../api/shops";
 import type { Shop } from "../../../types/Shop";
 import { Skeleton } from "../../common/ShopsSidebarSkeleton";
@@ -9,19 +9,26 @@ type ShopsSidebarProps = {
 };
 
 export const ShopsSidebar = ({ onSelectShop, shopId }: ShopsSidebarProps) => {
-  const [shops, setShops] = useState<Shop[]>([]);
-  const [loading, setLoading] = useState(true);
+  const {
+    data: shops = [],
+    isLoading,
+    isError,
+  } = useQuery<Shop[], Error>({
+    queryKey: ["shops"],
+    queryFn: () => fetchShops(),
+  });
 
-  useEffect(() => {
-    fetchShops()
-      .then((data) => setShops(data))
-      .finally(() => setLoading(false));
-  }, []);
+  if (isError)
+    return (
+      <p className="flex justify-center m-auto  text-gray-500">
+        We couldn't load your order. Please try again later.
+      </p>
+    );
 
   return (
-    <div className="border-1 min-h-screen p-10 rounded-md w-90">
+    <div className="border-1 lg:h-[65vh] p-10 rounded-md w-90 max-h-[80vh]">
       <h2 className="text-xl font-bold mb-6 text-center">Shops</h2>
-      {loading ? (
+      {isLoading ? (
         <Skeleton count={5} />
       ) : (
         <div className="flex flex-col gap-6">

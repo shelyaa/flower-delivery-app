@@ -7,7 +7,7 @@ export const ShoppingCartPage = () => {
   const cartItems = useAppSelector((state: RootState) => state.cart.items);
   const totalPrice = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
-    0
+    0,
   );
 
   return (

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { Flower } from "../../../types/Flower";
 import { FlowerCard } from "./FlowerCard";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
@@ -6,6 +6,7 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { fetchFlowersByShop } from "../../../api/flowers";
 import { FlowersGridSkeleton } from "../../common/FlowersGridSkeleton";
 import PaginationRounded from "../../ui/Pagination";
+import { useQuery } from "@tanstack/react-query";
 
 type FlowersGridProps = {
   shopId: number;
@@ -13,31 +14,29 @@ type FlowersGridProps = {
   setPage: (page: number) => void;
 };
 
+type FlowersResponse = {
+  items: Flower[];
+  totalPages: number;
+};
+
 export const FlowersGrid = ({ shopId, page, setPage }: FlowersGridProps) => {
-  const [flowers, setFlowers] = useState<Flower[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [totalPages, setTotalPages] = useState(1);
 
-  const fetchFlowers = async () => {
-    setLoading(true);
-    try {
-      const data = await fetchFlowersByShop(shopId, sortOrder, page);
-      setFlowers(data.items);
-      setTotalPages(data.totalPages || 1);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data, isLoading, isError, refetch } = useQuery<
+    FlowersResponse,
+    Error
+  >({
+    queryKey: ["flowers", shopId, sortOrder, page],
+    queryFn: () => fetchFlowersByShop(shopId, sortOrder, page),
+  });
 
-  useEffect(() => {
-    fetchFlowers();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shopId, sortOrder, page]);
-
-  if (loading) return <FlowersGridSkeleton count={12} />;
+  if (isLoading) return <FlowersGridSkeleton count={12} />;
+  if (isError)
+    return (
+      <p className="flex justify-center m-auto  text-gray-500">
+        We couldn't load flowers. Please try again later.
+      </p>
+    );
 
   return (
     <div>
@@ -66,11 +65,11 @@ export const FlowersGrid = ({ shopId, page, setPage }: FlowersGridProps) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {flowers.map((flower) => (
+        {data?.items.map((flower) => (
           <FlowerCard
             key={flower.id}
             flower={flower}
-            onFavoriteToggle={fetchFlowers}
+            onFavoriteToggle={refetch}
           />
         ))}
       </div>
@@ -78,7 +77,7 @@ export const FlowersGrid = ({ shopId, page, setPage }: FlowersGridProps) => {
       <div className="mt-6 flex justify-center">
         <PaginationRounded
           page={page}
-          totalPages={totalPages}
+          totalPages={data?.totalPages || 1}
           onChange={(newPage) => setPage(newPage)}
         />
       </div>

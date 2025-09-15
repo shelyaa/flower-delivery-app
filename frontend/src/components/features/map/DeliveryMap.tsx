@@ -1,14 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useCallback } from "react";
-import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
+import {useEffect, useCallback} from "react";
+import {GoogleMap, useLoadScript, Marker} from "@react-google-maps/api";
 
 type DeliveryMapProps = {
   userAddress: string;
   setUserAddress: (addr: string) => void;
-  userCoordinates: { lat: number; lng: number };
-  setUserCoordinates: (coords: { lat: number; lng: number }) => void;
-  shopCoordinates: { lat: number; lng: number };
-  errors: { address?: string };
+  userCoordinates: {lat: number; lng: number};
+  setUserCoordinates: (coords: {lat: number; lng: number}) => void;
+  error?: string;
 };
 
 export const DeliveryMap = ({
@@ -16,27 +15,26 @@ export const DeliveryMap = ({
   setUserAddress,
   userCoordinates,
   setUserCoordinates,
-  shopCoordinates,
-  errors,
+  error,
 }: DeliveryMapProps) => {
-  const { isLoaded } = useLoadScript({
+  const {isLoaded} = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
     language: "uk",
   });
 
   const fetchCoordinates = async (address: string) => {
     const geocoder = new google.maps.Geocoder();
-    geocoder.geocode({ address }, (results, status) => {
+    geocoder.geocode({address}, (results, status) => {
       if (status === "OK" && results && results[0]) {
         const location = results[0].geometry.location;
-        setUserCoordinates({ lat: location.lat(), lng: location.lng() });
+        setUserCoordinates({lat: location.lat(), lng: location.lng()});
       }
     });
   };
 
   const fetchAddress = async (lat: number, lng: number) => {
     const geocoder = new google.maps.Geocoder();
-    geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+    geocoder.geocode({location: {lat, lng}}, (results, status) => {
       if (status === "OK" && results && results[0]) {
         setUserAddress(results[0].formatted_address);
       }
@@ -48,7 +46,7 @@ export const DeliveryMap = ({
       if (event.latLng) {
         const lat = event.latLng.lat();
         const lng = event.latLng.lng();
-        setUserCoordinates({ lat, lng });
+        setUserCoordinates({lat, lng});
         fetchAddress(lat, lng);
       }
     },
@@ -70,22 +68,17 @@ export const DeliveryMap = ({
         <input
           name="address"
           type="text"
-          className={`border rounded-md p-2 ${
-            errors.address ? "border-red-500" : ""
-          }`}
+          className={`border rounded-md p-2 ${error ? "border-red-500" : ""}`}
           placeholder="Delivery address"
           value={userAddress}
           onChange={(e) => setUserAddress(e.target.value)}
         />
-        {errors.address && (
-          <span className="text-sm text-red-600">{errors.address}</span>
-        )}
       </label>
 
       <GoogleMap
         center={userCoordinates}
         zoom={12}
-        mapContainerStyle={{ width: "100%", height: "300px" }}
+        mapContainerStyle={{width: "100%", height: "300px"}}
         onClick={handleMapClick}
       >
         <Marker
@@ -95,13 +88,11 @@ export const DeliveryMap = ({
             const lat = e.latLng?.lat();
             const lng = e.latLng?.lng();
             if (lat && lng) {
-              setUserCoordinates({ lat, lng });
+              setUserCoordinates({lat, lng});
               fetchAddress(lat, lng);
             }
           }}
         />
-
-        <Marker position={shopCoordinates} label="Shop" />
       </GoogleMap>
     </div>
   );
