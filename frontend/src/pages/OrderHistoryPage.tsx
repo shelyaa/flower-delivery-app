@@ -10,7 +10,7 @@ export const OrderHistoryPage = () => {
 
   return (
     <div className="flex gap-10 flex-col md:flex-row">
-      <div className="mt-20 w-full md:w-[25vw]">
+      <div className="md:mt-20 w-full md:w-[25vw]">
         <SearchOrderForm
           setOrders={setOrders}
           setLoading={setLoading}
@@ -27,14 +27,14 @@ export const OrderHistoryPage = () => {
           </p>
         ) : (
           <div>
-            <h2 className="text-3xl font-extrabold mb-8 tracking-tight text-black">
+            <h2 className="text-3xl font-extrabold mb-8 tracking-tight text-black text-center">
               Order Details
             </h2>
             <div>
               {orders.map((order) => (
                 <div
                   key={order.id}
-                  className="bg-white shadow-sm rounded-2xl p-6 mb-8 transition hover:shadow-md w-sm md:w-3xl"
+                  className="bg-white shadow-sm rounded-2xl p-6 mb-8 transition hover:shadow-md w-xs sm:w-3xl"
                 >
                   <OrderHistoryItem order={order} />
                 </div>

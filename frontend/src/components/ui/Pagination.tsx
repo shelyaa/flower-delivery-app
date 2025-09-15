@@ -27,7 +27,7 @@ const PaginationRounded = ({ page, totalPages, onChange }: Props) => {
             key={i}
             onClick={() => onChange(i + 1)}
             className={`px-4 py-2 border rounded ${
-              page === i + 1 ? "bg-red-800 text-white " : "hover:bg-gray-200"
+              page === i + 1 ? "bg-main text-white " : "hover:bg-gray-200"
             }`}
           >
             {i + 1}

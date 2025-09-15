@@ -2,8 +2,8 @@ import { Link, NavLink } from "react-router-dom";
 
 export const Header = () => {
   return (
-    <header className="p-8 flex justify-between items-center w-full">
-      <Link to="/" className="text-2xl font-bold">
+    <header className="p-8 flex justify-between items-center w-full flex-col sm:flex-row">
+      <Link to="/" className="text-2xl font-bold mb-4">
         Flower Shop
       </Link>
       <nav className="flex gap-6">

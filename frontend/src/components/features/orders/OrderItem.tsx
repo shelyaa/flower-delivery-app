@@ -6,7 +6,7 @@ type OrderItemProps = {
 
 export const OrderItem = ({ item }: OrderItemProps) => {
   return (
-    <div className="flex items-center gap-4 p-4 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 transition">
+    <div className="flex items-center gap-4 p-4 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 transition overflow-auto">
       <img
         src={item.image_url}
         alt={item.name}

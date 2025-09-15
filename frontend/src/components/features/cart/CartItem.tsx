@@ -20,7 +20,7 @@ export const CartItem = ({
       />
       <div className="flex-1">
         <h3 className="font-medium">{item.name}</h3>
-        <p className="text-sm text-gray-500">Price: {item.price}</p>
+        <p className="text-sm text-gray-500">Price: {item.price}$</p>
       </div>
 
       <input

@@ -10,7 +10,7 @@ type OrderItemProps = {
 export const OrderHistoryItem = ({ order }: OrderItemProps) => {
   return (
     <div>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 ">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
         <p className="text-lg font-bold text-black">Order #{order.id}</p>
         <span className="text-sm text-gray-400">
           {formatDate(order.created_at)}

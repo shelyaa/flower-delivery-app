@@ -160,7 +160,6 @@ export const OrderForm = ({cartItems, totalPrice}: OrderFormProps) => {
           />
         )}
       />
-      <ErrorMessage message={errors.address?.message} />
 
       <button
         type="submit"

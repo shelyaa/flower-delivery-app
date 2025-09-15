@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useEffect, useCallback} from "react";
 import {GoogleMap, useLoadScript, Marker} from "@react-google-maps/api";
+import { ErrorMessage } from "../../common/ErrorMessage";
 
 type DeliveryMapProps = {
   userAddress: string;
@@ -74,6 +75,7 @@ export const DeliveryMap = ({
           onChange={(e) => setUserAddress(e.target.value)}
         />
       </label>
+      <ErrorMessage message={error} />
 
       <GoogleMap
         center={userCoordinates}
